@@ -17,26 +17,22 @@ namespace _9_4_вариант
             InitializeComponent();
             this.Text = "График функции и её производной";
             pictureBox1.Dock = DockStyle.Fill;
-            pictureBox1.MinimumSize = new Size(800, 600); // Увеличено для наглядности
-            DrawGraphs(); // Отрисовка при запуске
+            pictureBox1.MinimumSize = new Size(800, 600);
+            DrawGraphs();
         }
 
         private void DrawGraphs()
         {
             if (pictureBox1.Width == 0 || pictureBox1.Height == 0) return;
-
-            // Создаем новое изображение
             Bitmap bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             using (Graphics g = Graphics.FromImage(bmp))
             {
                 g.Clear(Color.White);
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-                // Находим диапазоны значений
                 double minX = x0, maxX = xk;
                 double minY = double.MaxValue, maxY = double.MinValue;
 
-                // Предварительный расчет для масштабирования
                 for (double x = x0; x <= xk; x += dx)
                 {
                     double y = FunctionY(x);
@@ -45,18 +41,15 @@ namespace _9_4_вариант
                     maxY = Math.Max(maxY, Math.Max(y, dy));
                 }
 
-                // Настройка масштаба
                 double scaleX = pictureBox1.Width / (maxX - minX);
-                double scaleY = pictureBox1.Height / (maxY - minY) * 0.8; // Запас 20%
+                double scaleY = pictureBox1.Height / (maxY - minY) * 0.8;
 
-                // Рисуем оси
                 Pen axisPen = new Pen(Color.Black, 2);
                 g.DrawLine(axisPen, 0, (float)(pictureBox1.Height - minY * scaleY),
-                    pictureBox1.Width, (float)(pictureBox1.Height - minY * scaleY)); // Ось X
+                    pictureBox1.Width, (float)(pictureBox1.Height - minY * scaleY));
                 g.DrawLine(axisPen, (float)(-minX * scaleX), 0,
-                    (float)(-minX * scaleX), pictureBox1.Height); // Ось Y
+                    (float)(-minX * scaleX), pictureBox1.Height);
 
-                // Рисуем графики
                 DrawFunction(g, minX, maxX, minY, maxY, Color.Blue, FunctionY);
                 DrawFunction(g, minX, maxX, minY, maxY, Color.Red, DerivativeFunction);
             }
@@ -75,13 +68,11 @@ namespace _9_4_вариант
             {
                 double y = function(x);
 
-                // Преобразование координат
                 int x1 = (int)((prevX - minX) * (pictureBox1.Width / (maxX - minX)));
                 int y1 = (int)(pictureBox1.Height - (prevY - minY) * (pictureBox1.Height / (maxY - minY)));
                 int x2 = (int)((x - minX) * (pictureBox1.Width / (maxX - minX)));
                 int y2 = (int)(pictureBox1.Height - (y - minY) * (pictureBox1.Height / (maxY - minY)));
 
-                // Ограничение координат
                 x1 = Math.Max(0, Math.Min(pictureBox1.Width, x1));
                 y1 = Math.Max(0, Math.Min(pictureBox1.Height, y1));
                 x2 = Math.Max(0, Math.Min(pictureBox1.Width, x2));
